@@ -277,3 +277,5 @@ I've noted the following:
     ```
 
 3. Several of the generators seem to generate `igamc: UNDERFLOW` errors over and over during the test. These are all generators that fail the tests, so I assume it's due to insufficient randomness. The message comes from function `cephes_igamc()` in file `cephes.c`; this is used many places, and I've not tracked down which test is causing this.
+
+This causes due to the data format. The NIST STS is designed to analyze binary sequences (streams of bits), not sequences of integers. Writing 32-bit unsigned integers to a binary file does not produce the required bitstream format for the NIST tests. Thus, we need to change the way it generates the random numbers which should be the streams of bits.
